@@ -1,0 +1,8 @@
+requests
+cryptography
+Flask
+Flask-Cors
+SQLAlchemy
+psycopg2-binary
+gunicorn
+python-dotenv
