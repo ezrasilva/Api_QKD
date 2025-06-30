@@ -106,6 +106,9 @@ def create_app():
 
     return app
 
+
+app = create_app()
+
 # --- Executar o Servidor ---
 if __name__ == '__main__':
     app = create_app()
