@@ -28,17 +28,17 @@ def create_app():
     CORS(app)
 
     # --- Configuração da Base de Dados ---
-    # Obtém a URL da base de dados da variável de ambiente.
     db_url = os.getenv("DATABASE_URL")
     if not db_url:
         raise ValueError("A variável de ambiente DATABASE_URL não está definida.")
     
-    # O Render usa 'postgres://', mas o SQLAlchemy espera 'postgresql://'
     if db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql://", 1)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    # CORREÇÃO: Adiciona a opção de "pre-ping" para lidar com ligações inativas.
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"pool_pre_ping": True}
 
     # Associa a instância da base de dados à aplicação
     db.init_app(app)
@@ -104,14 +104,3 @@ def create_app():
         return jsonify({"messages": decrypted_messages})
 
     return app
-
-
-app = create_app()
-
-# --- Executar o Servidor ---
-if __name__ == '__main__':
-    app = create_app()
-    # Cria as tabelas na base de dados, se não existirem
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True, port=5001)
