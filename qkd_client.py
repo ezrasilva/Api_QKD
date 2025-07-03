@@ -8,7 +8,7 @@ def _get_qkd_response(api_url, params, account_id, my_sae_id, kme_number):
     Função auxiliar interna para executar a chamada à API QKD e tratar a resposta.
     """
     kme_host = f"kme-{kme_number}.acct-{account_id}.etsi-qkd-api.qukaydee.com"
-    ca_cert_file = f"account-{account_id}-server-ca-qukaydee-com.crt"
+    ca_cert_file = f"account-{account_id}-server-ca-qukaydee.com.crt"
     client_cert_file = f"{my_sae_id}.crt"
     client_key_file = f"{my_sae_id}.key"
     
@@ -32,7 +32,6 @@ def _get_qkd_response(api_url, params, account_id, my_sae_id, kme_number):
         response.raise_for_status()
         return response.json()
     except Exception as e:
-        # Não imprimimos o erro imediatamente, pois podemos tentar novamente
         print(f"   (Falha na tentativa de comunicar com a API em {full_api_url}: {e})")
         return None
 
@@ -65,7 +64,8 @@ def get_key_by_id(account_id, my_sae_id, partner_sae_id, key_id_to_find, kme_num
     """
     print(f"({my_sae_id} em kme-{kme_number}) -> Buscando chave com ID {key_id_to_find} partilhada com {partner_sae_id}...")
     
-    api_path = f"/api/v1/keys/{partner_sae_id}/dec_keys"
+    # CORREÇÃO: O Bob deve aceder ao seu próprio endpoint.
+    api_path = f"/api/v1/keys/{my_sae_id}/dec_keys"
     params = {"key_ID": key_id_to_find}
     
     max_retries = 3
@@ -84,7 +84,6 @@ def get_key_by_id(account_id, my_sae_id, partner_sae_id, key_id_to_find, kme_num
                     print(f"({my_sae_id}) -> Chave com ID {key_id_to_find} recebida com sucesso!")
                     return key_material_b64
 
-        # Se a chave não foi encontrada, espera antes de tentar novamente
         if attempt < max_retries - 1:
             print(f"   Chave ainda não disponível. A aguardar {retry_delay_seconds}s para a próxima tentativa...")
             time.sleep(retry_delay_seconds)
