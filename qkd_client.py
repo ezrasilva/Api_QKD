@@ -8,7 +8,7 @@ def _get_qkd_response(api_url, params, account_id, my_sae_id, kme_number):
     Função auxiliar interna para executar a chamada à API QKD e tratar a resposta.
     """
     kme_host = f"kme-{kme_number}.acct-{account_id}.etsi-qkd-api.qukaydee.com"
-    ca_cert_file = f"account-{account_id}-server-ca-qukaydee.com.crt"
+    ca_cert_file = f"account-{account_id}-server-ca-qukaydee-com.crt"
     client_cert_file = f"{my_sae_id}.crt"
     client_key_file = f"{my_sae_id}.key"
     
