@@ -29,7 +29,6 @@ def create_app():
 
     # --- Configuração da Base de Dados ---
     # Obtém a URL da base de dados da variável de ambiente.
-    # O Render irá fornecer esta variável automaticamente.
     db_url = os.getenv("DATABASE_URL")
     if not db_url:
         raise ValueError("A variável de ambiente DATABASE_URL não está definida.")
